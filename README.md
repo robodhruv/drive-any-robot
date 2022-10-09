@@ -10,4 +10,4 @@ _Berkeley AI Research_
 
 ---
 
-Code and Dataset Coming Soon!
+Code and Model Coming Soon!
