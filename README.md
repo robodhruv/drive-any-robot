@@ -4,7 +4,7 @@
 _Berkeley AI Research_
 
 
-[Project Page](sites.google.com/view/drive-any-robot) | [arXiV](https://arxiv.org/abs/2210.03370) | [Summary Video](https://www.youtube.com/watch?v=ICeD6iOglKc)
+[Project Page](https://sites.google.com/view/drive-any-robot) | [arXiV](https://arxiv.org/abs/2210.03370) | [Summary Video](https://www.youtube.com/watch?v=ICeD6iOglKc)
 
 ---
 ## Overview
