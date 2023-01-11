@@ -1,0 +1,100 @@
+project_name: gnm_release
+run_name: gnm_large
+
+# training setup
+use_wandb: True # set to false if you don't want to log to wandb
+train: True
+batch_size: 750
+eval_batch_size: 750
+epochs: 30
+gpu_ids: [1, 2] 
+num_workers: 4
+lr: 7e-4
+optimizer: adam
+seed: 0
+
+# model params
+model_type: gnm
+obs_encoding_size: 1024
+goal_encoding_size: 1024
+
+# normalization for the action space
+normalize: True
+
+# context
+context_type: temporal # [temporal, randomized]
+context_size: 5
+
+# tradeoff between action and distance prediction loss
+alpha: 0.5
+
+# distance bounds for distance and action and distance predictions 
+distance:
+  min_dist_cat: 0
+  max_dist_cat: 20
+action:
+  min_dist_cat: 2
+  max_dist_cat: 10
+close_far_threshold: 10 # distance threshold used to seperate the close and the far  subgoals that are sampled per datapoint
+
+# action output params
+len_traj_pred: 5
+learn_angle: True
+
+# dataset specific parameters
+image_size: [85, 64] # width, height
+datasets:
+  recon:
+    data_folder: /home/gnmuser/recon # absolute path #/home/gnmuser/recon_jpeg120
+    train: recon/train/ # path inside the train/gnm_train/data/data_splits dir
+    test: recon/test/ # path inside the train/gnm_train/data/data_splits dir 
+    waypoint_spacing: 1 # spacing between observations
+    end_slack: 3 # because many trajectories end in collisions
+    goals_per_obs: 1 # how many goals are sampled per observation
+    negative_mining: True # negative mining from the ViNG paper (Shah et al.)
+  go_stanford:
+    data_folder: /home/gnmuser/go_stanford_filtered # datasets/stanford_go_new
+    train: go_stanford/train/
+    test: go_stanford/test/
+    waypoint_spacing: 1
+    end_slack: 0
+    goals_per_obs: 2 # increase dataset size
+    negative_mining: True
+  cory_hall:
+    data_folder: /home/gnmuser/coryhall/
+    train: coryhall/train/
+    test: coryhall/test/
+    waypoint_spacing: 1
+    end_slack: 3 # because many trajectories end in collisions
+    goals_per_obs: 1
+    negative_mining: True
+  seattle:
+    data_folder: /home/gnmuser/uw_cleaned/
+    train: seattle/train/
+    test: seattle/test/
+    waypoint_spacing: 1
+    end_slack: 0
+    goals_per_obs: 1
+    negative_mining: True
+  scand:
+    data_folder: /home/gnmuser/scand_cleaned/
+    train: scand/train/
+    test: scand/test/
+    waypoint_spacing: 1
+    end_slack: 0
+    goals_per_obs: 1
+    negative_mining: True
+  tartan_drive:
+    data_folder: /home/gnmuser/tartan_drive_cleaned/
+    train: tartan_drive/train/
+    test: tartan_drive/test/
+    waypoint_spacing: 1
+    end_slack: 3 # because many trajectories end in collisions
+    goals_per_obs: 1
+    negative_mining: True
+
+# logging stuff
+print_log_freq: 100 # in iterations
+image_log_freq: 1000 # in iterations
+num_images_log: 8 # number of images to log in a logging iteration
+pairwise_test_freq: 20 # in epochs

@@ -1,0 +1,19 @@
+name: gnm_train
+channels:
+- pytorch
+dependencies:
+- python=3.8.5
+- cudatoolkit=10.
+- numpy
+- matplotlib
+- pip
+- pip:
+  - torch==1.11.0
+  - torchvision==0.12.0
+  - tqdm==4.64.0
+  - opencv-python==4.6.0.66
+  - h5py==3.6.0
+  - wandb==0.12.18
+  - --extra-index-url https://rospypi.github.io/simple/ 
+  - rosbag
+  - roslz4

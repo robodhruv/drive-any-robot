@@ -1,0 +1,10 @@
+gnm_small:
+  path: gnm_small.pth
+
+gnm_medium:
+  path: gnm_medium.pth
+
+gnm_large:
+  path: gnm_large.pth
+
+# add your own model configs here after saving the *.pth file to ../model_weights:

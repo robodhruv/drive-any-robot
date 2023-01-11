@@ -1,0 +1,20 @@
+<launch>
+    <!-- Launch the camera -->
+    <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+        <rosparam file="../config/camera.yaml" command="load" />
+    </node>
+
+    <!-- Launch the joy stick node -->
+    <node pkg="joy" type="joy_node" name="joy_node">
+         <rosparam file="../config/joystick.yaml" command="load" />
+    </node>
+
+    <!-- Launch the locobot with only use_base -->
+    <include file="$(find locobot_control)/launch/main.launch">
+        <arg name="use_base" value="true"/>
+        <arg name="use_rviz" value="false"/> 
+    </include>
+
+
+    
+</launch>

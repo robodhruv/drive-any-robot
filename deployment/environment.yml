@@ -1,0 +1,13 @@
+name: gnm_deployment
+channels:
+- pytorch
+- conda-forge
+dependencies:
+- python=3.8.5
+- pytorch
+- torchvision
+- numpy
+- matplotlib
+- pyyaml
+- rospkg
+- pip
