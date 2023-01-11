@@ -1,13 +1,15 @@
-project_name: gnm_release
-run_name: gnm_medium
+# NOTE: this model uses private datasets
+
+project_name: gnm
+run_name: gnm_large
 
 # training setup
 use_wandb: True # set to false if you don't want to log to wandb
 train: True
-batch_size: 750
-eval_batch_size: 750
+batch_size: 400
+eval_batch_size: 400
 epochs: 30
-gpu_ids: [4, 5] 
+gpu_ids: [0] 
 num_workers: 4
 lr: 7e-4
 optimizer: adam
@@ -68,30 +70,30 @@ datasets:
     end_slack: 3 # because many trajectories end in collisions
     goals_per_obs: 1
     negative_mining: True
-  # seattle:
-  #   data_folder: /home/gnmuser/uw_cleaned/
-  #   train: seattle/train/
-  #   test: seattle/test/
-  #   waypoint_spacing: 1
-  #   end_slack: 0
-  #   goals_per_obs: 1
-  #   negative_mining: True
-  # scand:
-  #   data_folder: /home/gnmuser/scand_cleaned/
-  #   train: scand/train/
-  #   test: scand/test/
-  #   waypoint_spacing: 1
-  #   end_slack: 0
-  #   goals_per_obs: 1
-  #   negative_mining: True
-  # tartan_drive:
-  #   data_folder: /home/gnmuser/tartan_drive_cleaned/
-  #   train: tartan_drive/train/
-  #   test: tartan_drive/test/
-  #   waypoint_spacing: 1
-  #   end_slack: 3 # because many trajectories end in collisions
-  #   goals_per_obs: 1
-  #   negative_mining: True
+  seattle:
+    data_folder: /home/gnmuser/uw_cleaned/
+    train: seattle/train/
+    test: seattle/test/
+    waypoint_spacing: 1
+    end_slack: 0
+    goals_per_obs: 1
+    negative_mining: True
+  scand:
+    data_folder: /home/gnmuser/scand_cleaned/
+    train: scand/train/
+    test: scand/test/
+    waypoint_spacing: 1
+    end_slack: 0
+    goals_per_obs: 1
+    negative_mining: True
+  tartan_drive:
+    data_folder: /home/gnmuser/tartan_drive_cleaned/
+    train: tartan_drive/train/
+    test: tartan_drive/test/
+    waypoint_spacing: 1
+    end_slack: 3 # because many trajectories end in collisions
+    goals_per_obs: 1
+    negative_mining: True
 
 # logging stuff
 print_log_freq: 100 # in iterations
