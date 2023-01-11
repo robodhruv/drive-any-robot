@@ -320,10 +320,12 @@ class GNM_Dataset(Dataset):
                 waypoints[1:, 2] -= waypoints[0, 2]
                 waypoints = calculate_sin_cos(waypoints)
             if self.normalize:
-                waypoints[:, :2] /= self.data_config[
-                    "metric_waypoint_spacing"
-                ]  # only divide the dx and dy
-                goal[:2] /= self.data_config["metric_waypoint_spacing"]
+                waypoints[:, :2] /= (
+                    self.data_config["metric_waypoint_spacing"] * self.waypoint_spacing
+                )  # only divide the dx and dy
+                goal[:2] /= (
+                    self.data_config["metric_waypoint_spacing"] * self.waypoint_spacing
+                )
             data.extend(
                 [
                     goal,
