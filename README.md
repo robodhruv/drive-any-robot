@@ -1,5 +1,6 @@
 # GNM: A General Navigation Model to Drive Any Robot
 #### Dhruv Shah*, Ajay Sridhar*, Arjun Bhorkar, Noriaki Hirose, Sergey Levine
+
 _Berkeley AI Research_
 
 
@@ -12,7 +13,7 @@ This repository contains code for training a GNM with your own data, pre-trained
 - `./train/train.py`: training script to train or fine-tune the GNM model on your custom data.
 - `./train/process_*.py`: scripts to process rosbags or other formats of robot trajectories into training data
 - `./deployment/src/record_bag.sh`: script to collect a demo trajectory in the target environment on the robot. This trajectory is subsampled to generate a topological graph of the environment.
-- `./deployment/src/gnm_locobot.sh`: script that deploys a trained GNM model on the robot to navigate to a desired goal in the generated topological graph. Please see relevant sections below for configuration settings.
+- `./deployment/src/navigate.sh`: script that deploys a trained GNM model on the robot to navigate to a desired goal in the generated topological graph. Please see relevant sections below for configuration settings.
 
 ## Train
 
@@ -42,34 +43,40 @@ We provide some sample scripts to process these datasets, either directly from a
 2. Run `split_dataset.py` with the relevant args
 
 
-The processed data should have a structure like this:
+The processed datas should have a structure like this:
 
-<dataset_name>
-├── <name_of_traj1>  
-	├── 0.jpg  
-	├── 1.jpg  
-	…  
-	├── M_1.jpg  
-	└── traj_data.pkl  
-├── <name_of_traj2>  
-	├── 0.jpg  
-	├── 1.jpg  
-	…  
-	├── M_2.jpg  
-	└── traj_data.pkl  
-…  
-├── <name_of_trajN>  
-	├── 0.jpg  
-	├── 1.jpg  
-	…  
-	├── M_N.jpg  
-	└── traj_data.pkl  
+```bash
+├── <dataset_name>
+│   ├── <name_of_traj1>
+│   │   ├── 0.png
+│   │   ├── 1.png
+│   │   ├── ...
+│   │   ├── M_1.png
+│   │   └── traj_data.pkl
+│   ├── <name_of_traj2>
+│   │   ├── 0.png
+│   │   ├── 1.png
+│   │   ├── ...
+│   │   ├── M_2.png
+│   │   └── traj_data.pkl
+│   ...
+└── └── <name_of_trajN>
+    	├── 0.png
+    	├── 1.png
+    	├── ...
+	├── M_N.png
+    	└── traj_data.pkl
+```
 
-<dataset_name>  
-├── train  
-	└── traj_names.txt  
-└── test  
-	└── traj_names.txt  
+The processed data split should have a structure like this inside `gnm_release/train/gnm_train/data/data_splits/`:
+
+```bash
+├── <dataset_name>
+│   ├── train
+|   |   └── traj_names.txt
+└── └── test
+        └── traj_names.txt 
+```  
 
 ### Training your GNM
 Run `python train.py -c train/config/gnm/gnm_public.yaml`
@@ -77,7 +84,7 @@ Run `python train.py -c train/config/gnm/gnm_public.yaml`
 
 #### Training your GNM from a checkpoint
 Instead of training from scratch, you can also load an existing checkpoint from the published results.
-Add `load_run: <project_name>/<log_run_name>`to your .yaml config file. The `*.pth` of the file you are loading to be saved in this file structure and renamed to “latest”: `gnm_release/train/logs/<project_name>/<log_run_name>/latest.pth`. This makes it easy to train from the checkpoint of a previous run since logs are saved this way by default. Note: if you are loading a checkpoint from a previous run, check for the name the run in the `gnm_release/train/logs/<project_name>/`, since the code appends a string of the date to each run_name specified in the config yaml file of the run to avoid duplicate run names. 
+Add `load_run: <project_name>/<log_run_name>`to your .yaml config file in `gnm_release/train/config/`. The `*.pth` of the file you are loading to be saved in this file structure and renamed to “latest”: `gnm_release/train/logs/<project_name>/<log_run_name>/latest.pth`. This makes it easy to train from the checkpoint of a previous run since logs are saved this way by default. Note: if you are loading a checkpoint from a previous run, check for the name the run in the `gnm_release/train/logs/<project_name>/`, since the code appends a string of the date to each run_name specified in the config yaml file of the run to avoid duplicate run names. 
 
 
 If you want to use our checkpoints, you can download the `*.pth` files from [this link](https://drive.google.com/drive/folders/1np7D0Ak7x10IoQn9h0qxn8eoxJQiw8Dr?usp=share_link).
@@ -114,7 +121,7 @@ This software was tested on a LoCoBot running Ubuntu 16.04 (now legacy, but shou
 
 ### Loading the model weights
 
-Save the model weights *.pth file in gnm_release/deployment/model_weights folder.
+Save the model weights *.pth file in `gnm_release/deployment/model_weights` folder.
 
 ### Collecting a Topological Map
 
@@ -126,9 +133,9 @@ This section discusses a simple way to create a topological map of the target en
 #### Record the rosbag: `./record_bag.sh <bag_name>`
 
 Run this command to teleoperate the robot with the joystick and camera. This command opens up three windows 
-1. `roslaunch gnm_locobot.launch`: This launch file opens the `usb_cam` node for the camera, the joy node for the joystick, and several nodes for the robot’s mobile base)
-2. `python joy_teleop.py`: This python script starts a node that reads inputs from the joy topic and outputs them on topics that teleoperate the robot’s base
-3. `rosbag record /usb_cam/image_raw -o <bag_name>`: This command isn’t run immediately (you have to click Enter). It will be run in the gnm_release/deployment/topomaps/bags directory, which we recommend to record rosbags in.
+1. `roslaunch gnm_locobot.launch`: This launch file opens the `usb_cam` node for the camera, the joy node for the joystick, and several nodes for the robot’s mobile base).
+2. `python joy_teleop.py`: This python script starts a node that reads inputs from the joy topic and outputs them on topics that teleoperate the robot’s base.
+3. `rosbag record /usb_cam/image_raw -o <bag_name>`: This command isn’t run immediately (you have to click Enter). It will be run in the gnm_release/deployment/topomaps/bags directory, where we recommend you store your rosbags.
 
 Once you are ready to record the bag, run the `rosbag record` script and teleoperate the robot on the map you want the robot to follow. When you are finished with recording the path, kill the `rosbag record` command, and then kill the tmux session.
 
@@ -163,14 +170,14 @@ The `<model_name>` is the name of the model in the `gnm_release/deployment/confi
 
 Make sure these configurations match what you used to train the model. The configurations for the models we provided the weights for are provided in yaml file for your reference.
 
-The `<topomap_dir>` is the name of the directory in `/gmn_release/deployment/topomaps/images` that has the images corresponding to the nodes in the topological map. The images are ordered by name from 0 to N.
+The `<topomap_dir>` is the name of the directory in `gmn_release/deployment/topomaps/images` that has the images corresponding to the nodes in the topological map. The images are ordered by name from 0 to N.
 
 This command opens up 4 windows:
 
-1. `roslaunch gnm_locobot.launch`: This launch file opens the usb_cam node for the camera, the joy node for the joystick, and several nodes for the robot’s mobile base)
-2. `python navigate.py --model <model_name> —dir <topomap_dir>`: This python script starts a node that reads in image observations from the `/usb_cam/image_raw` topic, inputs the observations and the map into the model, and publishes actions on the `/waypoint` topic.
-3. `python joy_teleop.py`: This python script starts a node that reads inputs from the joy topic and outputs them on topics that teleoperate the robot’s base
-4. `python pd_controller.py`: This python script starts a node that reads messages from the /waypoint topics (waypoints from the model) and outputs velocities to navigate the robot’s base.
+1. `roslaunch gnm_locobot.launch`: This launch file opens the usb_cam node for the camera, the joy node for the joystick, and several nodes for the robot’s mobile base).
+2. `python navigate.py --model <model_name> —dir <topomap_dir>`: This python script starts a node that reads in image observations from the `/usb_cam/image_raw` topic, inputs the observations and the map into the model, and publishes actions to the `/waypoint` topic.
+3. `python joy_teleop.py`: This python script starts a node that reads inputs from the joy topic and outputs them on topics that teleoperate the robot’s base.
+4. `python pd_controller.py`: This python script starts a node that reads messages from the `/waypoint` topic (waypoints from the model) and outputs velocities to navigate the robot’s base.
 
 When the robot is finishing navigating, kill the `pd_controller.py` script, and then kill the tmux session. If you want to take control of the robot while it is navigating, the `joy_teleop.py` script allows you to do so with the joystick.
 
@@ -189,5 +196,3 @@ We hope that this codebase is general enough to allow you to deploy it to your f
    url      = {https://arxiv.org/abs/2210.03370}
 }
 ```
-
-
