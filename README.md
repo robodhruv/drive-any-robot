@@ -79,7 +79,7 @@ The processed data split should have a structure like this inside `gnm_release/t
 ```  
 
 ### Training your GNM
-Run `python train.py -c train/config/gnm/gnm_public.yaml`
+Run `python train.py -c config/gnm/gnm_public.yaml`
 
 
 #### Training your GNM from a checkpoint

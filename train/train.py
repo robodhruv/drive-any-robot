@@ -253,7 +253,7 @@ if __name__ == "__main__":
         help="Path to the config file in train_config folder",
     )
     args = parser.parse_args()
-    with open(os.path.join("config", args.config), "r") as f:
+    with open(args.config, "r") as f:
         config = yaml.safe_load(f)
 
     config["run_name"] += "_" + time.strftime("%Y_%m_%d_%H_%M_%S")
@@ -261,7 +261,7 @@ if __name__ == "__main__":
         "logs", config["project_name"], config["run_name"]
     )
     os.makedirs(
-        config["project_folder"],
+        config["project_folder"], # should error if dir already exists to avoid overwriting and old project
     )
 
     if config["use_wandb"]:
