@@ -1,10 +1,31 @@
 gnm_small:
   path: gnm_small.pth
+  model_type: "gnm" # can be [gnm, stacked, siamese]
+  context: 5 # context length
+  len_traj_pred: 5 # number of future waypoints to predict
+  normalize: True # whether to normalize action space
+  learn_angle: True # whether to learn the yaw for each waypoint
+  obs_encoding_size: 1024 # observation encoding dimension
+  goal_encoding_size: 1024 # goal encoding dimension
 
 gnm_medium:
   path: gnm_medium.pth
+  model_type: "gnm"
+  context: 5
+  len_traj_pred: 5
+  normalize: True
+  learn_angle: True
+  obs_encoding_size: 1024
+  goal_encoding_size: 1024
 
 gnm_large:
   path: gnm_large.pth
+  model_type: "gnm"
+  context: 5
+  len_traj_pred: 5
+  normalize: True
+  learn_angle: True
+  obs_encoding_size: 1024
+  goal_encoding_size: 1024
 
 # add your own model configs here after saving the *.pth file to ../model_weights:

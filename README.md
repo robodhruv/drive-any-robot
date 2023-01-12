@@ -11,7 +11,7 @@ _Berkeley AI Research_
 This repository contains code for training a GNM with your own data, pre-trained model checkpoints, as well as example code to deploy it on a TurtleBot2/LoCoBot robot.
 
 - `./train/train.py`: training script to train or fine-tune the GNM model on your custom data.
-- `./train/process_*.py`: scripts to process rosbags or other formats of robot trajectories into training data
+- `./train/process_*.py`: scripts to process rosbags or other formats of robot trajectories into training data.
 - `./deployment/src/record_bag.sh`: script to collect a demo trajectory in the target environment on the robot. This trajectory is subsampled to generate a topological graph of the environment.
 - `./deployment/src/navigate.sh`: script that deploys a trained GNM model on the robot to navigate to a desired goal in the generated topological graph. Please see relevant sections below for configuration settings.
 
@@ -36,51 +36,76 @@ In the [GNM paper](https://sites.google.com/view/drive-any-robot), we train on a
 
 We recommend you to download these (and any other datasets you may want to train on) and run the processing steps below.
 
-#### Data Processing
+#### Data Processing 
 
 We provide some sample scripts to process these datasets, either directly from a rosbag or from a custom format like HDF5s:
-1. Run `process_bags.py` with the relevant args, or `process_recon.py` for processing RECON HDF5s.
-2. Run `split_dataset.py` with the relevant args
+1. Run `process_bags.py` with the relevant args, or `process_recon.py` for processing RECON HDF5s. You can also manually add your own dataset by following our structure below (if you are adding a custom dataset, please checkout the [Custom Datasets](#custom-datasets) section).
+2. Run `data_split.py` on your dataset folder with the relevant args.
 
+After step 1 of data processing, the processed dataset should have the following structure:
 
-The processed datas should have a structure like this:
-
-```bash
+```
 ├── <dataset_name>
 │   ├── <name_of_traj1>
 │   │   ├── 0.png
 │   │   ├── 1.png
 │   │   ├── ...
-│   │   ├── M_1.png
+│   │   ├── T_1.png
 │   │   └── traj_data.pkl
 │   ├── <name_of_traj2>
 │   │   ├── 0.png
 │   │   ├── 1.png
 │   │   ├── ...
-│   │   ├── M_2.png
+│   │   ├── T_2.png
 │   │   └── traj_data.pkl
 │   ...
 └── └── <name_of_trajN>
     	├── 0.png
     	├── 1.png
     	├── ...
-	├── M_N.png
-    	└── traj_data.pkl
+		├── T_N.png
+			└── traj_data.pkl
+```  
+
+Each `*.jpg` file contains an forward-facing RGB observation from the robot, and they are temporally labeled. The `traj_data.pkl` file is the odometry data for the trajectory. It’s a pickled dictionary with the keys:
+- `"position"`: An np.ndarray [T, 2] of the xy-coordinates of the robot at each image observation.
+- `"yaw"`: An np.ndarray [T,] of the yaws of the robot at each image observation.
+
+
+After step 2 of data processing, the processed data-split should the following structure inside `gnm_release/train/gnm_train/data/data_splits/`:
+
 ```
-
-The processed data split should have a structure like this inside `gnm_release/train/gnm_train/data/data_splits/`:
-
-```bash
 ├── <dataset_name>
 │   ├── train
 |   |   └── traj_names.txt
 └── └── test
         └── traj_names.txt 
-```  
+``` 
 
 ### Training your GNM
 Run `python train.py -c config/gnm/gnm_public.yaml`
 
+#### Custom Config Files
+You can use one of the premade yaml files as a starting point and change the values as you need. `config/gnm/gnm_public.yaml` is good choice since it has commented arguments. `config/defaults.yaml` contains the default config values (don't directly train with this config file since it does not specify any datasets for training).
+
+#### Custom Datasets
+Make sure your dataset and data-split directory follows the structures provided in the [Data Processing](#data-processing) section. Locate `train/gnm_train/data/data_config.yaml` and append the following:
+
+```
+<dataset_name>:
+    metric_waypoints_distance: <average_distance_in_meters_between_waypoints_in_the_dataset>
+```
+
+Locate your training config file and add the following text under the `datasets` argument (feel free to change the values of `end_slack`, `goals_per_obs`, and `negative_mining`):
+```
+<dataset_name>:
+    data_folder: <path_to_the_dataset>
+    train: data/data_splits/<dataset_name>/train/ 
+    test: data/data_splits/<dataset_name>/test/ 
+    end_slack: 0 # how many timesteps to cut off from the end of each trajectory  (in case many trajectories end in collisions)
+    goals_per_obs: 1 # how many goals are sampled per observation
+    negative_mining: True # negative mining from the ViNG paper (Shah et al.)
+```
 
 #### Training your GNM from a checkpoint
 Instead of training from scratch, you can also load an existing checkpoint from the published results.
@@ -121,7 +146,7 @@ This software was tested on a LoCoBot running Ubuntu 16.04 (now legacy, but shou
 
 ### Loading the model weights
 
-Save the model weights *.pth file in `gnm_release/deployment/model_weights` folder.
+Save the model weights *.pth file in `gnm_release/deployment/model_weights` folder. Our models weights are in [this link](https://drive.google.com/drive/folders/1np7D0Ak7x10IoQn9h0qxn8eoxJQiw8Dr?usp=share_link).
 
 ### Collecting a Topological Map
 
@@ -158,15 +183,15 @@ To deploy one of the models from the published results, we are releasing model c
 
 
 The `<model_name>` is the name of the model in the `gnm_release/deployment/config/models.yaml` file. In this file, you specify these parameters of the model for each model (defaults used):
-- path (path of the *.pth file in `gnm_release/deployment/model_weights/`, default: large_gnm.pth)
-- model_type (one of these: [gnm, stacked, siamese], default: gnm)
-- context (int, default: 5)
-- len_traj_pred (int, default: 5)
-- normalize (bool, default: True)
-- learn_angle (bool, default: True)
-- obs_encoding_size (int, default: 1024)
-- goal_encoding_size (int, default: 1024)
-- obs_encoding_size (int, default: 2048)
+- `path` (str, default: large_gnm.pth): path of the *.pth file in `gnm_release/deployment/model_weights/`
+- `model_type` (str, default: gnm): one of these [gnm, stacked, siamese]
+- `context` (int, default: 5): context length
+- `len_traj_pred` (int, default: 5): number of future waypoints to predict 
+- `normalize` (bool, default: True): whether or not to normalize the waypoints
+- `learn_angle` (bool, default: True): whether or not to learn the yaw for each waypoint
+- `obs_encoding_size` (int, default: 1024): observation encoding dimension
+- `goal_encoding_size` (int, default: 1024): goal encoding dimension
+- `obsgoal_encoding_size` (int, default: 2048): observation + goal encoding dimension for the stacked model
 
 Make sure these configurations match what you used to train the model. The configurations for the models we provided the weights for are provided in yaml file for your reference.
 
