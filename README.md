@@ -47,23 +47,23 @@ After step 1 of data processing, the processed dataset should have the following
 ```
 ├── <dataset_name>
 │   ├── <name_of_traj1>
-│   │   ├── 0.png
-│   │   ├── 1.png
+│   │   ├── 0.jpg
+│   │   ├── 1.jpg
 │   │   ├── ...
-│   │   ├── T_1.png
+│   │   ├── T_1.jpg
 │   │   └── traj_data.pkl
 │   ├── <name_of_traj2>
-│   │   ├── 0.png
-│   │   ├── 1.png
+│   │   ├── 0.jpg
+│   │   ├── 1.jpg
 │   │   ├── ...
-│   │   ├── T_2.png
+│   │   ├── T_2.jpg
 │   │   └── traj_data.pkl
 │   ...
 └── └── <name_of_trajN>
-    	├── 0.png
-    	├── 1.png
+    	├── 0.jpg
+    	├── 1.jpg
     	├── ...
-		├── T_N.png
+		└── T_N.jpg
 			└── traj_data.pkl
 ```  
 
