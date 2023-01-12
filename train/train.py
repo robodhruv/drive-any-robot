@@ -77,16 +77,11 @@ def main(config):
         data_config = config["datasets"][dataset_name]
         for data_split_type in ["train", "test"]:
             if data_split_type in data_config:
-                data_split_folder = os.path.join(
-                    DIR_PATH,
-                    "gnm_train/data/data_splits",
-                    data_config[data_split_type],
-                )
                 for output_type in ["action", "distance", "pairwise"]:
                     if output_type == "pairwise":
                         dataset = PairwiseDistanceDataset(
                             data_config["data_folder"],
-                            data_split_folder,
+                            data_config[data_split_type],
                             dataset_name,
                             transform,
                             aspect_ratio,
@@ -102,7 +97,7 @@ def main(config):
                     else:
                         dataset = GNM_Dataset(
                             data_config["data_folder"],
-                            data_split_folder,
+                            data_config[data_split_type],
                             dataset_name,
                             output_type == "action",
                             transform,
