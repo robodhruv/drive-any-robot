@@ -40,7 +40,7 @@ We recommend you to download these (and any other datasets you may want to train
 
 We provide some sample scripts to process these datasets, either directly from a rosbag or from a custom format like HDF5s:
 1. Run `process_bags.py` with the relevant args, or `process_recon.py` for processing RECON HDF5s.
-2. Run `split_dataset.py` with the relevant args
+2. Run `data_split.py` with the relevant args
 
 
 The processed datas should have a structure like this:
@@ -51,20 +51,20 @@ The processed datas should have a structure like this:
 │   │   ├── 0.png
 │   │   ├── 1.png
 │   │   ├── ...
-│   │   ├── M_1.png
+│   │   ├── T_1.png
 │   │   └── traj_data.pkl
 │   ├── <name_of_traj2>
 │   │   ├── 0.png
 │   │   ├── 1.png
 │   │   ├── ...
-│   │   ├── M_2.png
+│   │   ├── T_2.png
 │   │   └── traj_data.pkl
 │   ...
 └── └── <name_of_trajN>
     	├── 0.png
     	├── 1.png
     	├── ...
-	├── M_N.png
+	├── T_N.png
     	└── traj_data.pkl
 ```
 
