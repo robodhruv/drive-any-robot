@@ -63,8 +63,8 @@ After step 1 of data processing, the processed dataset should have the following
     	├── 0.jpg
     	├── 1.jpg
     	├── ...
-		└── T_N.jpg
-			└── traj_data.pkl
+	├── T_N.jpg
+	└── traj_data.pkl
 ```  
 
 Each `*.jpg` file contains an forward-facing RGB observation from the robot, and they are temporally labeled. The `traj_data.pkl` file is the odometry data for the trajectory. It’s a pickled dictionary with the keys:
