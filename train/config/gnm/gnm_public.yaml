@@ -7,7 +7,7 @@ train: True
 batch_size: 400
 eval_batch_size: 400
 epochs: 30
-gpu_ids: [0] 
+gpu_ids: [0] # list of gpu ids to use
 num_workers: 4
 lr: 5e-4
 optimizer: adam
@@ -45,10 +45,9 @@ learn_angle: True
 image_size: [85, 64] # width, height
 datasets:
   recon:
-    data_folder: ../datasets/recon
-    train: data/data_splits/recon/train/
-    test: data/data_splits/recon/test/
-    waypoint_spacing: 1 # spacing between observations
+    data_folder: ../datasets/recon # path to the dataset
+    train: data/data_splits/recon/train/ # path to the train dir with traj_names.txt
+    test: data/data_splits/recon/test/ # path to the test dir with traj_names.txt
     end_slack: 3 # because many trajectories end in collisions
     goals_per_obs: 1 # how many goals are sampled per observation
     negative_mining: True # negative mining from the ViNG paper (Shah et al.)
@@ -56,7 +55,6 @@ datasets:
     data_folder: ../datasets/go_stanford
     train: data/data_splits/go_stanford/train/
     test: data/data_splits/go_stanford/test/
-    waypoint_spacing: 1
     end_slack: 0
     goals_per_obs: 2 # increase dataset size
     negative_mining: True
@@ -64,7 +62,6 @@ datasets:
     data_folder: ../datasets/scand
     train: data/data_splits/scand/train/
     test: data/data_splits/scand/test/
-    waypoint_spacing: 1
     end_slack: 0
     goals_per_obs: 1
     negative_mining: True
@@ -72,7 +69,6 @@ datasets:
     data_folder: /home/gnmuser/tartan_drive/
     train: data/data_splits/tartan_drive/train/
     test: data/data_splits/tartan_drive/test/
-    waypoint_spacing: 1
     end_slack: 3 # because many trajectories end in collisions
     goals_per_obs: 1
     negative_mining: True

@@ -23,9 +23,6 @@ from gnm_train.training.train_utils import (
     get_saved_optimizer,
 )
 
-# get dir of this file
-DIR_PATH = os.path.dirname(os.path.realpath(__file__))
-
 
 def main(config):
     assert config["distance"]["min_dist_cat"] < config["distance"]["max_dist_cat"]
@@ -75,44 +72,54 @@ def main(config):
 
     for dataset_name in config["datasets"]:
         data_config = config["datasets"][dataset_name]
+        if "negative_mining" not in data_config:
+            data_config["negative_mining"] = True
+        if "goals_per_obs" not in data_config:
+            data_config["goals_per_obs"] = 1
+        if "end_slack" not in data_config:
+            data_config["end_slack"] = 0
+        if "waypoint_spacing" not in data_config:
+            data_config["waypoint_spacing"] = 1
+            
         for data_split_type in ["train", "test"]:
             if data_split_type in data_config:
                 for output_type in ["action", "distance", "pairwise"]:
+                    
                     if output_type == "pairwise":
                         dataset = PairwiseDistanceDataset(
-                            data_config["data_folder"],
-                            data_config[data_split_type],
-                            dataset_name,
-                            transform,
-                            aspect_ratio,
-                            data_config["waypoint_spacing"],
-                            config["distance"]["min_dist_cat"],
-                            config["distance"]["max_dist_cat"],
-                            config["close_far_threshold"],
-                            data_config["negative_mining"],
-                            config["context_size"],
-                            config["context_type"],
-                            data_config["end_slack"],
+                            data_folder=data_config["data_folder"],
+                            data_split_folder=data_config[data_split_type],
+                            dataset_name=dataset_name,
+                            transform=transform,
+                            aspect_ratio=aspect_ratio,
+                            waypoint_spacing=data_config["waypoint_spacing"],
+                            min_dist_cat=config["distance"]["min_dist_cat"],
+                            max_dist_cat=config["distance"]["max_dist_cat"],
+                            close_far_threshold=config["close_far_threshold"],
+                            negative_mining=data_config["negative_mining"],
+                            context_size=config["context_size"],
+                            context_type=config["context_type"],
+                            end_slack=data_config["end_slack"],
                         )
                     else:
                         dataset = GNM_Dataset(
-                            data_config["data_folder"],
-                            data_config[data_split_type],
-                            dataset_name,
-                            output_type == "action",
-                            transform,
-                            aspect_ratio,
-                            data_config["waypoint_spacing"],
-                            config[output_type]["min_dist_cat"],
-                            config[output_type]["max_dist_cat"],
-                            data_config["negative_mining"],
-                            config["len_traj_pred"],
-                            config["learn_angle"],
-                            config["context_size"],
-                            config["context_type"],
-                            data_config["end_slack"],
-                            data_config["goals_per_obs"],
-                            config["normalize"],
+                            data_folder=data_config["data_folder"],
+                            data_split_folder=data_config[data_split_type],
+                            dataset_name=dataset_name,
+                            is_action=(output_type == "action"),
+                            transform=transform,
+                            aspect_ratio=aspect_ratio,
+                            waypoint_spacing=data_config["waypoint_spacing"],
+                            min_dist_cat=config[output_type]["min_dist_cat"],
+                            max_dist_cat=config[output_type]["max_dist_cat"],
+                            negative_mining=data_config["negative_mining"],
+                            len_traj_pred=config["len_traj_pred"],
+                            learn_angle=config["learn_angle"],
+                            context_size=config["context_size"],
+                            context_type=config["context_type"],
+                            end_slack=data_config["end_slack"],
+                            goals_per_obs=data_config["goals_per_obs"],
+                            normalize=config["normalize"],
                         )
                     if data_split_type == "train":
                         if output_type == "distance":
@@ -243,20 +250,30 @@ if __name__ == "__main__":
     parser.add_argument(
         "--config",
         "-c",
-        default="gnm/gnm_public.yaml",
+        default="config/gnm/gnm_public.yaml",
         type=str,
         help="Path to the config file in train_config folder",
     )
     args = parser.parse_args()
+
+    with open("config/defaults.yaml", "r") as f:
+        default_config = yaml.safe_load(f)
+
+    config = default_config
+
     with open(args.config, "r") as f:
-        config = yaml.safe_load(f)
+        user_config = yaml.safe_load(f)
+
+    config.update(user_config)
 
     config["run_name"] += "_" + time.strftime("%Y_%m_%d_%H_%M_%S")
     config["project_folder"] = os.path.join(
         "logs", config["project_name"], config["run_name"]
     )
     os.makedirs(
-        config["project_folder"], # should error if dir already exists to avoid overwriting and old project
+        config[
+            "project_folder"
+        ],  # should error if dir already exists to avoid overwriting and old project
     )
 
     if config["use_wandb"]:

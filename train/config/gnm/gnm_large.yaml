@@ -47,50 +47,44 @@ learn_angle: True
 image_size: [85, 64] # width, height
 datasets:
   recon:
-    data_folder: /home/gnmuser/recon # absolute path #/home/gnmuser/recon_jpeg120
-    train: recon/train/ # path inside the train/gnm_train/data/data_splits dir
-    test: recon/test/ # path inside the train/gnm_train/data/data_splits dir 
-    waypoint_spacing: 1 # spacing between observations
+    data_folder: /home/gnmuser/recon # path #/home/gnmuser/recon_jpeg120
+    train: data/data_splits/recon/train/ # path to train folder with traj_names.txt
+    test: data/data_splits/recon/test/ # path to test folder with traj_names.txt
     end_slack: 3 # because many trajectories end in collisions
     goals_per_obs: 1 # how many goals are sampled per observation
     negative_mining: True # negative mining from the ViNG paper (Shah et al.)
   go_stanford:
     data_folder: /home/gnmuser/go_stanford_filtered # datasets/stanford_go_new
-    train: go_stanford/train/
-    test: go_stanford/test/
-    waypoint_spacing: 1
+    train: data/data_splits/go_stanford/train/
+    test: data/data_splits/go_stanford/test/
     end_slack: 0
     goals_per_obs: 2 # increase dataset size
     negative_mining: True
   cory_hall:
     data_folder: /home/gnmuser/coryhall/
-    train: coryhall/train/
-    test: coryhall/test/
-    waypoint_spacing: 1
+    train: data/data_splits/coryhall/train/
+    test: data/data_splits/coryhall/test/
     end_slack: 3 # because many trajectories end in collisions
     goals_per_obs: 1
     negative_mining: True
   seattle:
     data_folder: /home/gnmuser/uw_cleaned/
-    train: seattle/train/
-    test: seattle/test/
-    waypoint_spacing: 1
+    train: data/data_splits/seattle/train/
+    test: data/data_splits/seattle/test/
     end_slack: 0
     goals_per_obs: 1
     negative_mining: True
   scand:
     data_folder: /home/gnmuser/scand_cleaned/
-    train: scand/train/
-    test: scand/test/
-    waypoint_spacing: 1
+    train: data/data_splits/scand/train/
+    test: data/data_splits/scand/test/
     end_slack: 0
     goals_per_obs: 1
     negative_mining: True
   tartan_drive:
     data_folder: /home/gnmuser/tartan_drive_cleaned/
-    train: tartan_drive/train/
-    test: tartan_drive/test/
-    waypoint_spacing: 1
+    train: data/data_splits/tartan_drive/train/
+    test: data/data_splits/tartan_drive/test/
     end_slack: 3 # because many trajectories end in collisions
     goals_per_obs: 1
     negative_mining: True

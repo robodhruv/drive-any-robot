@@ -48,7 +48,6 @@ datasets:
     data_folder: ../datasets/recon
     train: data/data_splits/recon/train/
     test: data/data_splits/recon/test/
-    waypoint_spacing: 1 # spacing between observations
     end_slack: 3 # because many trajectories end in collisions
     goals_per_obs: 1 # how many goals are sampled per observation
     negative_mining: True # negative mining from the ViNG paper (Shah et al.)
@@ -56,7 +55,6 @@ datasets:
     data_folder: ../datasets/go_stanford
     train: data/data_splits/go_stanford/train/
     test: data/data_splits/go_stanford/test/
-    waypoint_spacing: 1
     end_slack: 0
     goals_per_obs: 2 # increase dataset size
     negative_mining: True
