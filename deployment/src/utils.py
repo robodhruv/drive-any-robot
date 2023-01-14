@@ -5,7 +5,6 @@ from sensor_msgs.msg import Image
 import torch
 import torch.nn as nn
 from torchvision import transforms
-import torchvision.transforms.functional as TF
 
 import numpy as np
 from PIL import Image as PILImage
@@ -19,11 +18,11 @@ from models.siamese import SiameseModel
 
 def load_model(
     model_path: str,
-    model_type: str,  
+    model_type: str,
     context: int,
     len_traj_pred: int,
-    learn_angle: bool, 
-    obs_encoding_size: int = 1024, 
+    learn_angle: bool,
+    obs_encoding_size: int = 1024,
     goal_encoding_size: int = 1024,
     obsgoal_encoding_size: int = 2048,
     device: torch.device = torch.device("cpu"),
@@ -69,17 +68,16 @@ def load_model(
 
 
 def msg_to_pil(msg: Image) -> PILImage.Image:
-    img = np.frombuffer(msg.data, dtype=np.uint8).reshape(
-        msg.height, msg.width, -1)
+    img = np.frombuffer(msg.data, dtype=np.uint8).reshape(msg.height, msg.width, -1)
     pil_image = PILImage.fromarray(img)
     return pil_image
 
 
 def pil_to_msg(pil_img: PILImage.Image) -> Image:
-    img = np.asarray(pil_img)  
+    img = np.asarray(pil_img)
     ros_image = Image(encoding="mono8")
     ros_image.height, ros_image.width, _ = img.shape
-    ros_image.data = img.ravel().tobytes() 
+    ros_image.data = img.ravel().tobytes()
     ros_image.step = ros_image.width
     return ros_image
 
@@ -88,14 +86,22 @@ def to_numpy(tensor):
     return tensor.cpu().detach().numpy()
 
 
-def transform_images(pil_imgs: List[PILImage.Image], image_size: [int, int]) -> torch.Tensor:
-    """Transforms a list of PIL image to a torch tensor."""
+def transform_images(
+    pil_imgs: List[PILImage.Image], image_size: List[int, int]
+) -> torch.Tensor:
+    """
+    Transforms a list of PIL image to a torch tensor.
+    Args:
+        pil_imgs (List[PILImage.Image]): List of PIL images to transform and concatenate
+        image_size (int, int): Size of the output image [width, height]
+    """
+    assert len(image_size) == 2
+    image_size = image_size[::-1] # torchvision's transforms.Resize expects [height, width]
     transform_type = transforms.Compose(
         [
             transforms.ToTensor(),
-            transforms.Resize(image_size),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
-                                    0.229, 0.224, 0.225]),
+            transforms.Resize(image_size[::-1]),  
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ]
     )
     if type(pil_imgs) != list:

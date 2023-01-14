@@ -184,6 +184,7 @@ To deploy one of the models from the published results, we are releasing model c
 
 The `<model_name>` is the name of the model in the `gnm_release/deployment/config/models.yaml` file. In this file, you specify these parameters of the model for each model (defaults used):
 - `path` (str, default: large_gnm.pth): path of the *.pth file in `gnm_release/deployment/model_weights/`
+- `image_size` (List[int, int], default: [85, 64]): [width, height] of the input images
 - `model_type` (str, default: gnm): one of these [gnm, stacked, siamese]
 - `context` (int, default: 5): context length
 - `len_traj_pred` (int, default: 5): number of future waypoints to predict 

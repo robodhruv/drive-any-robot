@@ -1,5 +1,6 @@
-gnm_small:
-  path: gnm_small.pth
+gnm_small: # name of the model
+  path: gnm_small.pth # path of the model in ../model_weights
+  image_size: [85, 64] # [widht, height] of input images
   model_type: "gnm" # can be [gnm, stacked, siamese]
   context: 5 # context length
   len_traj_pred: 5 # number of future waypoints to predict
@@ -9,6 +10,7 @@ gnm_small:
   goal_encoding_size: 1024 # goal encoding dimension
 
 gnm_medium:
+  image_size: [85, 64] 
   path: gnm_medium.pth
   model_type: "gnm"
   context: 5
@@ -19,6 +21,7 @@ gnm_medium:
   goal_encoding_size: 1024
 
 gnm_large:
+  image_size: [85, 64] 
   path: gnm_large.pth
   model_type: "gnm"
   context: 5

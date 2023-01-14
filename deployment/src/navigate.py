@@ -27,17 +27,17 @@ IMAGE_TOPIC = "/usb_cam/image_raw"
 
 # DEFAULT MODEL PARAMETERS (can be overwritten by model.yaml)
 model_params = {
-    "path": "large_gnm.pth", # path of the model in ../
+    "path": "large_gnm.pth", # path of the model in ../model_weights
     "model_type": "gnm", # gnm (conditioned), stacked, or siamese
     "context": 5, # number of images to use as context
     "len_traj_pred": 5, # number of waypoints to predict
     "normalize": True, # bool to determine whether or not normalize images
-    "img_size": (64, 85), # (height, width)
+    "image_size": [85, 64], # (width, height)
     "normalize": True, # bool to determine whether or not normalize the waypoints
     "learn_angle": True, # bool to determine whether or not to learn/predict heading of the robot
-    "obs_encoding_size": 1024,
-    "goal_encoding_size": 1024,
-    "obsgoal_encoding_size": 2048,
+    "obs_encoding_size": 1024, # size of the encoding of the observation [only used by gnm and siamese]
+    "goal_encoding_size": 1024, # size of the encoding of the goal [only used by gnm and siamese]
+    "obsgoal_encoding_size": 2048, # size of the encoding of the observation and goal [only used by stacked model]
 }
 
 # GLOBALS
@@ -118,8 +118,8 @@ def main(args: argparse.Namespace):
             distances = []
             waypoints = []
             for sg_img in topomap[start: end + 1]:
-                transf_obs_img = transform_images(context_queue, model_params["img_size"])
-                transf_sg_img = transform_images(sg_img, model_params["img_size"])
+                transf_obs_img = transform_images(context_queue, model_params["image_size"])
+                transf_sg_img = transform_images(sg_img, model_params["image_size"])
                 dist, waypoint = model(transf_obs_img, transf_sg_img) 
                 distances.append(to_numpy(dist[0]))
                 waypoints.append(to_numpy(waypoint[0]))

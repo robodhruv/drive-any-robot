@@ -13,8 +13,5 @@
     <include file="$(find locobot_control)/launch/main.launch">
         <arg name="use_base" value="true"/>
         <arg name="use_rviz" value="false"/> 
-    </include>
-
-
-    
+    </include> 
 </launch>
