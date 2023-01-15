@@ -40,7 +40,7 @@ def main(args: argparse.Namespace):
             print(f"Error loading {bag_path}. Skipping...")
             continue
 
-        # name is that folders seperated by _ and then the last part of the path
+        # name is that folders separated by _ and then the last part of the path
         traj_name = "_".join(bag_path.split("/")[-2:])[:-4]
 
         # load the hdf5 file
