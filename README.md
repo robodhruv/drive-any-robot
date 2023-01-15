@@ -23,9 +23,19 @@ This subfolder contains code for processing datasets and training a GNM from you
 
 The codebase assumes access to a workstation running Ubuntu (tested on 18.04 and 20.04), Python 3.7+, and a GPU with CUDA 10+. It also assumes access to conda, but you can modify it to work with other virtual environment packages, or a native setup.
 ### Setup
-
-1. Set up the conda environment `conda env create -f train/environment.yml`
-2. `pip install -e train/`
+Run the commands below inside the `gnm_release/` (topmost) directory:
+1. Set up the conda environment:
+    ```bash
+    conda env create -f train/environment.yml
+    ```
+2. Source the conda environment:
+    ```
+    conda activate gnm_train
+    ```
+3. Install the gnm_train packages:
+    ```bash
+    pip install -e train/
+    ```
 
 ### Data-Wrangling
 In the [GNM paper](https://sites.google.com/view/drive-any-robot), we train on a combination of publicly available and unreleased datasets. Below is a list of publicly available datasets used for training; please contact the respective authors for access to the unreleased data.
@@ -63,8 +73,8 @@ After step 1 of data processing, the processed dataset should have the following
     	├── 0.jpg
     	├── 1.jpg
     	├── ...
-	├── T_N.jpg
-	└── traj_data.pkl
+        ├── T_N.jpg
+        └── traj_data.pkl
 ```  
 
 Each `*.jpg` file contains an forward-facing RGB observation from the robot, and they are temporally labeled. The `traj_data.pkl` file is the odometry data for the trajectory. It’s a pickled dictionary with the keys:
@@ -83,7 +93,11 @@ After step 2 of data processing, the processed data-split should the following s
 ``` 
 
 ### Training your GNM
-Run `python train.py -c config/gnm/gnm_public.yaml`
+Run this inside the `gnm_release/train` directory:
+```bash
+python train.py -c <path_of_train_config_file>
+```
+The premade config yaml files are in the `train/config` directory. 
 
 #### Custom Config Files
 You can use one of the premade yaml files as a starting point and change the values as you need. `config/gnm/gnm_public.yaml` is good choice since it has commented arguments. `config/defaults.yaml` contains the default config values (don't directly train with this config file since it does not specify any datasets for training).
@@ -124,18 +138,31 @@ This software was tested on a LoCoBot running Ubuntu 16.04 (now legacy, but shou
 
 
 #### Software Installation (in this order)
-1. ROS: ros-kinetic (https://wiki.ros.org/kinetic/Installation/Ubuntu)
-    - ROS packages: `sudo apt-get install ros-kinetic-usb-cam ros-kinetic-joy`
-2. [PyRobot](https://pyrobot.org/docs/software)
-3. Conda 
+1. ROS: [ros-kinetic](https://wiki.ros.org/kinetic/Installation/Ubuntu)
+2. ROS packages: 
+    ```bash
+    sudo apt-get install ros-kinetic-usb-cam ros-kinetic-joy
+    ```
+3. [PyRobot](https://pyrobot.org/docs/software)
+4. Conda 
     - Install anaconda/miniconda/etc. for managing environments
-    - Make conda env with environment.yml
-    - Source env (alt, add to bashrc): 
-        `echo “conda activate gnm_deployment” >> ~/.bashrc`
-4. Source environments
-    - Source the ros setup.sh
-    - Source the conda environment
-5. (Recommended) Install [tmux](https://github.com/tmux/tmux/wiki/Installing) if not present.
+    - Make conda env with environment.yml (run this inside the `gnm_release/` directory)
+        ```bash
+        conda env create -f deployment/environment.yml
+        ```
+    - Source env 
+        ```bash
+        conda activate gnm_deployment
+        ```
+    - (Recommended) add to `~/.bashrc`: 
+        ```bash
+        echo “conda activate gnm_deployment” >> ~/.bashrc 
+        ```
+5. Install the `gnm_train` packages (run this inside the `gnm_release/` directory):
+    ```bash
+    pip install -e train/
+    ```
+6. (Recommended) Install [tmux](https://github.com/tmux/tmux/wiki/Installing) if not present.
     Many of the bash scripts rely on tmux to launch multiple screens with different commands. This will be useful for debugging because you can see the output of each screen.
 
 #### Hardware Requirements
@@ -150,12 +177,15 @@ Save the model weights *.pth file in `gnm_release/deployment/model_weights` fold
 
 ### Collecting a Topological Map
 
-_Make sure to run these scripts in the `src` directory._
+_Make sure to run these scripts inside the `gnm_release/deployment/src/` directory._
 
 
 This section discusses a simple way to create a topological map of the target environment for deployment. For simplicity, we will use the robot in “path-following” mode, i.e. given a single trajectory in an environment, the task is to follow the same trajectory to the goal. The environment may have new/dynamic obstacles, lighting variations etc.
 
-#### Record the rosbag: `./record_bag.sh <bag_name>`
+#### Record the rosbag: 
+```bash
+./record_bag.sh <bag_name>
+```
 
 Run this command to teleoperate the robot with the joystick and camera. This command opens up three windows 
 1. `roslaunch gnm_locobot.launch`: This launch file opens the `usb_cam` node for the camera, the joy node for the joystick, and several nodes for the robot’s mobile base).
@@ -164,7 +194,10 @@ Run this command to teleoperate the robot with the joystick and camera. This com
 
 Once you are ready to record the bag, run the `rosbag record` script and teleoperate the robot on the map you want the robot to follow. When you are finished with recording the path, kill the `rosbag record` command, and then kill the tmux session.
 
-#### Make the topological map: `./create_topomap.sh <topomap_name> <bag_filename>`
+#### Make the topological map: 
+```bash
+./create_topomap.sh <topomap_name> <bag_filename>
+```
 
 This command opens up 3 windows:
 1. `roscore`
@@ -175,9 +208,11 @@ When the bag stops playing, kill the tmux session.
 
 
 ### Running the model 
-_Make sure to run these scripts in the `src` directory._
+_Make sure to run this script inside the `gnm_release/deployment/src/` directory._
 
-`./navigate.sh “--model <model_name> —dir <topomap_dir>”`
+```bash
+./navigate.sh “--model <model_name> --dir <topomap_dir>”
+```
 
 To deploy one of the models from the published results, we are releasing model checkpoints that you can download from [this link](https://drive.google.com/drive/folders/1np7D0Ak7x10IoQn9h0qxn8eoxJQiw8Dr?usp=share_link).
 

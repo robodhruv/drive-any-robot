@@ -1,7 +1,7 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name="gnm_train",
     version="0.1.0",
-    packages=["gnm_train"],
+    packages=find_packages(),
 )

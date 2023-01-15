@@ -1,1 +1,0 @@
-Download model checkpoints here
