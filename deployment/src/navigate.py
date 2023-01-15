@@ -137,11 +137,12 @@ def main(args: argparse.Namespace):
             waypoint_msg.data = chosen_waypoint
             waypoint_pub.publish(waypoint_msg)
             closest_node += start
-            if closest_node == goal_node:
-                reached_goal = True
-                print("reached goal!")
+            reached_goal = closest_node == goal_node
             print("closest node:", closest_node)
             goal_pub.publish(reached_goal)
+            if reached_goal:
+                print("Reached goal Stopping...")
+                return
             rate.sleep()
 
 

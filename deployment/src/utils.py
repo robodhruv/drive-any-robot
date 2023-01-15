@@ -11,9 +11,9 @@ from PIL import Image as PILImage
 from typing import List
 
 # models
-from models.gnm import GNM
-from models.stacked import StackedModel
-from models.siamese import SiameseModel
+from gnm_train.models.gnm import GNM
+from gnm_train.models.stacked import StackedModel
+from gnm_train.models.siamese import SiameseModel
 
 
 def load_model(

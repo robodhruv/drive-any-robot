@@ -4,9 +4,10 @@ import yaml
 # ROS
 import rospy
 from geometry_msgs.msg import Twist
-from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Float32MultiArray, Bool
 
 vel_msg = Twist()
+reached_goal = False
 CONFIG_PATH = "../config/robot.yaml"
 with open(CONFIG_PATH, "r") as f:
 	robot_config = yaml.safe_load(f)
@@ -59,14 +60,26 @@ def callback_drive(waypoint_msg: Float32MultiArray):
 	print("publishing new vel")
 
 
+def callback_reached_goal(reached_goal_msg: Bool):
+	"""Callback function for the reached goal subscriber"""
+	global reached_goal
+	reached_goal = reached_goal_msg.data
+
+
 def main():
 	rospy.init_node("PD_CONTROLLER", anonymous=False)
 	waypoint_sub = rospy.Subscriber("/waypoint", Float32MultiArray, callback_drive, queue_size=1)
+	reached_goal_sub = rospy.Subscriber("/topoplan/reached_goal", Bool, callback_reached_goal, queue_size=1)
 	vel_out = rospy.Publisher(VEL_TOPIC, Twist, queue_size=1)
 	rate = rospy.Rate(RATE)
 	print("Registered with master node. Waiting for waypoints...")
 	while not rospy.is_shutdown():
 		vel_out.publish(vel_msg)
+		if reached_goal:
+			vel_msg = Twist()
+			vel_out.publish(vel_msg)
+			print("Reached goal! Stopping...")
+			return
 		rate.sleep()
 	
 
