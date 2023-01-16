@@ -225,9 +225,9 @@ The `<model_name>` is the name of the model in the `gnm_release/deployment/confi
 - `len_traj_pred` (int, default: 5): number of future waypoints to predict 
 - `normalize` (bool, default: True): whether or not to normalize the waypoints
 - `learn_angle` (bool, default: True): whether or not to learn the yaw for each waypoint
-- `obs_encoding_size` (int, default: 1024): observation encoding dimension
-- `goal_encoding_size` (int, default: 1024): goal encoding dimension
-- `obsgoal_encoding_size` (int, default: 2048): observation + goal encoding dimension for the stacked model
+- `obs_encoding_size` (int, default: 1024): observation encoding dimension (only for the GNM and the siamese model)
+- `goal_encoding_size` (int, default: 1024): goal encoding dimension (only for the GNM and the siamese model)
+- `obsgoal_encoding_size` (int, default: 2048): observation + goal encoding dimension (only for the stacked model)
 
 Make sure these configurations match what you used to train the model. The configurations for the models we provided the weights for are provided in yaml file for your reference.
 
