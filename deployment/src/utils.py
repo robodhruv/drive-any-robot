@@ -87,7 +87,7 @@ def to_numpy(tensor):
 
 
 def transform_images(
-    pil_imgs: List[PILImage.Image], image_size: List[int, int]
+    pil_imgs: List[PILImage.Image], image_size: List[int]
 ) -> torch.Tensor:
     """
     Transforms a list of PIL image to a torch tensor.

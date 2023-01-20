@@ -1,5 +1,6 @@
 import numpy as np
 import yaml
+from typing import Tuple
 
 # ROS
 import rospy
@@ -27,7 +28,7 @@ def clip_angle(theta) -> float:
 	return theta - 2 * np.pi
       
 
-def pd_controller(waypoint: np.ndarray) -> (float, float):
+def pd_controller(waypoint: np.ndarray) -> Tuple(float):
 	"""PD controller for the robot"""
 	assert len(waypoint) == 2 or len(waypoint) == 4, "waypoint must be a 2D or 4D vector"
 	if len(waypoint) == 2:
