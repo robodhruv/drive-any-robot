@@ -46,8 +46,8 @@ image_size: [85, 64] # width, height
 datasets:
   go_stanford:
     data_folder: ../datasets/go_stanford
-    train: data/data_splits/go_stanford/train/
-    test: data/data_splits/go_stanford/test/
+    train: gnm_train/data/data_splits/go_stanford/train/
+    test: gnm_train/data/data_splits/go_stanford/test/
     end_slack: 0
     goals_per_obs: 2 # increase dataset size
     negative_mining: True

@@ -46,8 +46,8 @@ image_size: [85, 64] # width, height
 datasets:
   recon:
     data_folder: ../datasets/recon
-    train: data/data_splits/recon/train/
-    test: data/data_splits/recon/test/
+    train: gnm_train/data/data_splits/recon/train/
+    test: gnm_train/data/data_splits/recon/test/
     end_slack: 3 # because many trajectories end in collisions
     goals_per_obs: 1 # how many goals are sampled per observation
     negative_mining: True # negative mining from the ViNG paper (Shah et al.)
