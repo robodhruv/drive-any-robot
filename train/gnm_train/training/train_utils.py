@@ -246,20 +246,20 @@ def train(
         _, action_pred = model(action_obs_data, action_goal_data)
         action_loss = F.mse_loss(action_pred, action_label)
         action_waypts_cos_similairity = F.cosine_similarity(
-            action_pred[:2], action_label[:2], dim=-1
+            action_pred[:, :, :2], action_label[:, :, :2], dim=-1
         ).mean()
         multi_action_waypts_cos_sim = F.cosine_similarity(
-            torch.flatten(action_pred[:2], start_dim=1),
-            torch.flatten(action_label[:2], start_dim=1),
+            torch.flatten(action_pred[:, :, :2], start_dim=1),
+            torch.flatten(action_label[:, :, :2], start_dim=1),
             dim=-1,
         ).mean()
         if learn_angle:
             action_orien_cos_sim = F.cosine_similarity(
-                action_pred[2:], action_label[2:], dim=-1
+                action_pred[:, :, 2:], action_label[:, :, 2:], dim=-1
             ).mean()
             multi_action_orien_cos_sim = F.cosine_similarity(
-                torch.flatten(action_pred[2:], start_dim=1),
-                torch.flatten(action_label[2:], start_dim=1),
+                torch.flatten(action_pred[:, :, 2:], start_dim=1),
+                torch.flatten(action_label[:, :, 2:], start_dim=1),
                 dim=-1,
             ).mean()
             action_orien_cos_sim_logger.log_data(action_orien_cos_sim.item())
@@ -419,20 +419,20 @@ def evaluate(
             _, action_pred = model(action_obs_data, action_goal_data)
             action_loss = F.mse_loss(action_pred, action_label)
             action_waypts_cos_sim = F.cosine_similarity(
-                action_pred[:2], action_label[:2], dim=-1
+                action_pred[:, :, :2], action_label[:, :, :2], dim=-1
             ).mean()
             multi_action_waypts_cos_sim = F.cosine_similarity(
-                torch.flatten(action_pred[:2], start_dim=1),
-                torch.flatten(action_label[:2], start_dim=1),
+                torch.flatten(action_pred[:, :, :2], start_dim=1),
+                torch.flatten(action_label[:, :, :2], start_dim=1),
                 dim=-1,
             ).mean()
             if learn_angle:
                 action_orien_cos_sim = F.cosine_similarity(
-                    action_pred[2:], action_label[2:], dim=-1
+                    action_pred[:, :, 2:], action_label[:, :, 2:], dim=-1
                 ).mean()
                 multi_action_orien_cos_sim = F.cosine_similarity(
-                    torch.flatten(action_pred[2:], start_dim=1),
-                    torch.flatten(action_label[2:], start_dim=1),
+                    torch.flatten(action_pred[:, :, 2:], start_dim=1),
+                    torch.flatten(action_label[:, :, 2:], start_dim=1),
                     dim=-1,
                 ).mean()
                 action_orien_cos_sim_logger.log_data(action_orien_cos_sim.item())
