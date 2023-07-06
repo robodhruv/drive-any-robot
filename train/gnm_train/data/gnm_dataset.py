@@ -15,7 +15,7 @@ from gnm_train.data.data_utils import (
     calculate_sin_cos,
     RandomizedClassBalancer,
     get_image_path,
-    to_local_coords,
+    to_ego_coords,
 )
 
 
@@ -312,9 +312,9 @@ class GNM_Dataset(Dataset):
             pos_list = np.concatenate((pos_list, goals_appendage), axis=0)
             pos_nplist = np.array(pos_list[1:])
             yaw = curr_traj_data["yaw"][curr_time]
-            waypoints = to_local_coords(pos_nplist, pos_list[0], yaw)
+            waypoints = to_ego_coords(pos_nplist, pos_list[0], yaw)
             waypoints = torch.Tensor(waypoints.astype(float))
-            goal = to_local_coords(pos_goal, pos_list[0], yaw)
+            goal=to_ego_coords(pos_goal, pos_list[0], yaw)
             goal = torch.Tensor(goal.astype(float))
             if self.learn_angle:  # localize the waypoint angles
                 waypoints[1:, 2] -= waypoints[0, 2]
