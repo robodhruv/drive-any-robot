@@ -29,7 +29,7 @@ def yaw_rotmat(yaw: float) -> np.ndarray:
     )
 
 
-def to_local_coords(
+def to_ego_coords(
     positions: np.ndarray, curr_pos: np.ndarray, curr_yaw: float
 ) -> np.ndarray:
     """
