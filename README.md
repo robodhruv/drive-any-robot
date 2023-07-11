@@ -23,7 +23,7 @@ This subfolder contains code for processing datasets and training a GNM from you
 
 The codebase assumes access to a workstation running Ubuntu (tested on 18.04 and 20.04), Python 3.7+, and a GPU with CUDA 10+. It also assumes access to conda, but you can modify it to work with other virtual environment packages, or a native setup.
 ### Setup
-Run the commands below inside the `gnm_release/` (topmost) directory:
+Run the commands below inside the `drive-any-robot/` (topmost) directory:
 1. Set up the conda environment:
     ```bash
     conda env create -f train/environment.yml
