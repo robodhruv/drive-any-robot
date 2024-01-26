@@ -7,6 +7,10 @@ _Berkeley AI Research_
 [Project Page](https://sites.google.com/view/drive-any-robot) | [arXiV](https://arxiv.org/abs/2210.03370) | [Summary Video](https://www.youtube.com/watch?v=ICeD6iOglKc)
 
 ---
+
+***Update Oct 2023: This repository is subsumed by https://github.com/robodhruv/visualnav-transformer, which includes training and deployment infrastructure for GNM and all subsequent general navigation models.***
+
+---
 ## Overview
 This repository contains code for training a GNM with your own data, pre-trained model checkpoints, as well as example code to deploy it on a TurtleBot2/LoCoBot robot.
 
