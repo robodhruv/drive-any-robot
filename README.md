@@ -130,7 +130,7 @@ Instead of training from scratch, you can also load an existing checkpoint from 
 Add `load_run: <project_name>/<log_run_name>`to your .yaml config file in `gnm_release/train/config/`. The `*.pth` of the file you are loading to be saved in this file structure and renamed to “latest”: `gnm_release/train/logs/<project_name>/<log_run_name>/latest.pth`. This makes it easy to train from the checkpoint of a previous run since logs are saved this way by default. Note: if you are loading a checkpoint from a previous run, check for the name the run in the `gnm_release/train/logs/<project_name>/`, since the code appends a string of the date to each run_name specified in the config yaml file of the run to avoid duplicate run names. 
 
 
-If you want to use our checkpoints, you can download the `*.pth` files from [this link](https://drive.google.com/drive/folders/1np7D0Ak7x10IoQn9h0qxn8eoxJQiw8Dr?usp=share_link).
+If you want to use our checkpoints, you can download the `*.pth` files from [this link]([https://drive.google.com/drive/folders/1np7D0Ak7x10IoQn9h0qxn8eoxJQiw8Dr?usp=share_link](https://drive.google.com/file/d/1bzCPd_OsXjS2aGPTQladbI8ImxLZwrQh/view?usp=share_link)).
 
 
 ## Deployment
